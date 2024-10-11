@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// InitCmd represents the 'init' command
 var InitCmd = &cobra.Command{
 	Use:     "init(i)",
 	Aliases: []string{"i", "init"},
@@ -26,7 +25,6 @@ var InitCmd = &cobra.Command{
 		language, _ := cmd.Flags().GetString("language")
 		languageVersion, _ := cmd.Flags().GetString("languageVersion")
 
-		// Generate the config.yaml
 		cfg := config.Config{
 			CMakeVersion:    cmakeVersion,
 			ProjectName:     projectName,
@@ -40,7 +38,6 @@ var InitCmd = &cobra.Command{
 
 		GenerateSource(sourceDir, language, &cfg)
 
-		// Detect source files in the src/ directory
 
 		ftemplate.GenerateCmake(cfg)
 		config.GenerateConfig(cfg)

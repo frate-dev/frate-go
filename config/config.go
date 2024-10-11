@@ -6,7 +6,6 @@ import (
 	"os"
 )
 
-// Config structure for YAML configuration
 type Config struct {
 	CMakeVersion    string            `yaml:"cmake_version"`
 	ProjectName     string            `yaml:"project_name"`
@@ -20,7 +19,6 @@ type Config struct {
 	Options         map[string]string `yaml:"options"`
 }
 
-// GenerateConfig writes the configuration to a YAML file
 func GenerateConfig(cfg Config) error {
 	file, err := os.Create("config.yaml")
 	if err != nil {
