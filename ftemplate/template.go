@@ -1,7 +1,7 @@
 package ftemplate
 
 import (
-	"fmt"
+	"log"
 	"frate-go/config"
 	"os"
 	"text/template"
@@ -9,13 +9,11 @@ import (
 
 func GenerateCmake(cfg config.Config) {
 	fileName := os.Getenv("HOME") + "/CMakeLists.txt.gotmpl"
-  fmt.Println(cfg)
 	tmpl, err := template.ParseFiles(fileName)
 	if err != nil {
-    fmt.Println("error", err)
+    log.Fatal("error", err)
 		return
 	}
 	file, err := os.Create("CMakeLists.txt")
 	tmpl.Execute(file, cfg)
-  tmpl.Execute(os.Stdout, cfg)
 }

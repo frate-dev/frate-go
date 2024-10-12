@@ -1,15 +1,17 @@
 package cmd
 
 import (
+	"fmt"
 	"frate-go/config"
 	"frate-go/ftemplate"
-	"github.com/spf13/cobra"
 	"log"
+
+	"github.com/spf13/cobra"
 )
 
-var BuildCmd = &cobra.Command{
-	Use:   "build",
-	Short: "Build the project using CMake",
+var RunCmd = &cobra.Command{
+	Use:   "run",
+	Short: "build and run your project",
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := config.ReadConfig()
 		if err != nil {
@@ -18,6 +20,9 @@ var BuildCmd = &cobra.Command{
 		}
 		ftemplate.GenerateCmake(config)
 		RunCommand("cmake", ".")
+		RunCommand("make")
+    fmt.Println()
+		RunCommand("./" + config.BuildDir + "/" + config.ProjectName)
 
 	},
 }

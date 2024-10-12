@@ -1,0 +1,1 @@
+target_link_libraries(FrateProject cxxopts sfml-graphics sfml-audio)
