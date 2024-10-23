@@ -28,7 +28,7 @@ build:
 .PHONY: install
 install: 
 	@echo "Installing $(APP_NAME) to $(GOBIN)..."
-	$(GO) install ./...
+	$(GO) install .
 
 .PHONY: test
 test: 

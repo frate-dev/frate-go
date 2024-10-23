@@ -2,9 +2,9 @@ package template
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -41,84 +41,55 @@ var pushCmd = &cobra.Command{
 	},
 }
 
-func validateMetadata(metadataPath string) error {
+func validateMetadata(metadataPath string)(TemplateMetadata, error) {
 	metadataFile, err := os.Open(metadataPath)
+	var metadata TemplateMetadata
 	if err != nil {
-		return fmt.Errorf("unable to open metadata.yaml: %v", err)
+		return metadata, fmt.Errorf("unable to open metadata.yaml: %v", err)
 	}
 	defer metadataFile.Close()
 
-	var metadata TemplateMetadata
-	decoder := yaml.NewDecoder(metadataFile)
-	err = decoder.Decode(metadata)
+	data, err := io.ReadAll(metadataFile)
+	if err != nil {
+		return metadata,fmt.Errorf("error reading file")
+	}
+	err = yaml.Unmarshal(data, &metadata)
+	fmt.Println("here metadata")
+	if err != nil {
+		return metadata, fmt.Errorf("error decoding metadata")
+	}
+	fmt.Println(metadata)
 
 	if metadata.Name == "" || metadata.Version == "" || metadata.GitURL == "" {
-		return fmt.Errorf("missing required fields in metadata")
+		return metadata, fmt.Errorf("missing required fields in metadata")
 	}
 
-	return nil
+	return metadata, nil
 }
 
 func pushTemplate(templateDir, serverURL string) error {
-
-	body := new(bytes.Buffer)
-	writer := multipart.NewWriter(body)
 	metadataPath := filepath.Join(templateDir, "metadata.yaml")
 	metadataFile, err := os.Open(metadataPath)
 	if err != nil {
 		return fmt.Errorf("unable to open metadata.yaml: %v", err)
 	}
-  err = validateMetadata(metadataPath)
+	metadata, err := validateMetadata(metadataPath)
   if err != nil {
 		return fmt.Errorf("unable to open metadata.yaml: %v", err)
   }
 	defer metadataFile.Close()
 
-	metadataWriter, err := writer.CreateFormFile("metadata", "metadata.yaml")
+	data, err := json.Marshal(metadata)
 	if err != nil {
-		return fmt.Errorf("unable to create form field for metadata: %v", err)
+		return fmt.Errorf("unable to marshal to json: %v", err)
 	}
-	_, err = io.Copy(metadataWriter, metadataFile)
-	if err != nil {
-		return fmt.Errorf("unable to copy metadata.yaml to form: %v", err)
-	}
-
-	err = filepath.Walk(filepath.Join(templateDir, "templates"), func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if !info.IsDir() {
-			file, err := os.Open(path)
-			if err != nil {
-				return fmt.Errorf("unable to open file: %v", err)
-			}
-			defer file.Close()
-
-			formFile, err := writer.CreateFormFile("files", filepath.Base(path))
-			if err != nil {
-				return fmt.Errorf("unable to create form field for file: %v", err)
-			}
-
-			_, err = io.Copy(formFile, file)
-			if err != nil {
-				return fmt.Errorf("unable to copy file to form: %v", err)
-			}
-		}
-		return nil
-	})
-
-	if err != nil {
-		return fmt.Errorf("error walking template directory: %v", err)
-	}
-
-	writer.Close()
-
-	req, err := http.NewRequest("POST", serverURL, body)
+	fmt.Println(string(data))
+	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(data))
 	if err != nil {
 		return fmt.Errorf("unable to create request: %v", err)
 	}
 
-	req.Header.Set("Content-Type", writer.FormDataContentType())
+	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

@@ -2,13 +2,11 @@ package template
 
 
 type TemplateMetadata struct {
-    ID          int      `json:"id,omitempty"`
-    Name        string   `json:"name"`
-    Version     string   `json:"version"`
-    Description string   `json:"description"`
-    Dependencies []string `json:"dependencies"`
-    GitURL      string   `json:"git_url"`
-    CreatedAt   string   `json:"created_at,omitempty"`
-    License     string   `json:"license,omitempty"`
+	ID           int      `yaml:"id,omitempty" json:"id,omitempty"`
+	Name         string   `yaml:"name" json:"name"`
+	Version      string   `yaml:"version" json:"version"`
+	InitScript   string   `yaml:"init_script,omitempty" json:"init_script,omitempty"`
+	Description  string   `yaml:"description" json:"description"`
+	Dependencies []string `yaml:"dependencies" json:"dependencies"`
+	GitURL       string   `yaml:"git_url" json:"git_url"`
 }
-
