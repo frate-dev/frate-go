@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"frate-go/cmd"
   "frate-go/cmd/dependency"
+  "frate-go/cmd/template"
 )
 
 var rootCmd = &cobra.Command{
@@ -21,5 +22,6 @@ func init() {
 	rootCmd.AddCommand(cmd.GenerateCmd)
 	rootCmd.AddCommand(cmd.RunCmd)
 	rootCmd.AddCommand(dependency.DependencyCmd)
+  rootCmd.AddCommand(template.TemplateCMD)
 }
 

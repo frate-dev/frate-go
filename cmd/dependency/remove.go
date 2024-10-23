@@ -32,7 +32,10 @@ var DepRemoveCmd = &cobra.Command{
 			}
 
 		}
-		config.GenerateConfig(cfg)
+		err = config.GenerateConfig(cfg)
+    if err != nil {
+      log.Fatal("error generating config", err)
+    }
 	},
 }
 

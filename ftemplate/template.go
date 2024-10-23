@@ -15,5 +15,12 @@ func GenerateCmake(cfg config.Config) {
 		return
 	}
 	file, err := os.Create("CMakeLists.txt")
-	tmpl.Execute(file, cfg)
+  if err != nil {
+    log.Fatal("couldn't create CMakeLists.txt", err)
+  }
+  err = tmpl.Execute(file, cfg)
+  if err != nil {
+    log.Fatal("error executing template", err)
+  }
+
 }

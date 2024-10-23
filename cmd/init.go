@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"frate-go/config"
 	"frate-go/ftemplate"
+	"log"
 	"os"
 	"text/template"
 
@@ -40,7 +41,10 @@ var InitCmd = &cobra.Command{
 
 
 		ftemplate.GenerateCmake(cfg)
-		config.GenerateConfig(cfg)
+    err := config.GenerateConfig(cfg)
+    if  err != nil {
+      log.Fatal("error generating config", err)
+    }
 
 	},
 }
@@ -59,7 +63,10 @@ func init() {
 }
 
 func GenerateSource(sourceDir string, lang string, cfg *config.Config) {
-	os.Mkdir(sourceDir, 0700)
+  err := os.Mkdir(sourceDir, 0700)
+  if err != nil {
+    log.Fatal("error creating directory", err)
+  }
 	var _ map[string]string
 	fileName := os.Getenv("HOME") + "/main.cpp.gotmpl"
 	tmpl, err := template.ParseFiles(fileName)
@@ -79,5 +86,8 @@ func GenerateSource(sourceDir string, lang string, cfg *config.Config) {
   if err != nil{
     fmt.Println(err)
   }
-	tmpl.Execute(file, "")
+	err = tmpl.Execute(file, "")
+  if err != nil {
+    log.Fatal("error executing template", err)
+  }
 }
