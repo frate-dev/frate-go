@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/spf13/cobra"
 	"frate-go/cmd"
-  "frate-go/cmd/dependency"
-  "frate-go/cmd/template"
+	"frate-go/cmd/dependency"
+	"frate-go/cmd/template"
+	"frate-go/cmd/packages"
+
+	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
@@ -23,5 +25,6 @@ func init() {
 	rootCmd.AddCommand(cmd.RunCmd)
 	rootCmd.AddCommand(dependency.DependencyCmd)
   rootCmd.AddCommand(template.TemplateCMD)
+	rootCmd.AddCommand(packages.PackageCMD) 
 }
 

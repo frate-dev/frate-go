@@ -8,6 +8,7 @@ import (
 var TemplateFetchCMD = &cobra.Command{
 	Use:     "init",
 	Aliases: []string{"i"},
+	Short: "Fetch a template from a remote repository", 
 	Args: func(cmd *cobra.Command, args []string) error {
 		if err := cobra.MinimumNArgs(1)(cmd, args); err != nil {
 			return err
@@ -21,4 +22,5 @@ var TemplateFetchCMD = &cobra.Command{
 }
 
 func init() {
+
 }

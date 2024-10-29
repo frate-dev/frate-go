@@ -16,7 +16,7 @@ var BuildCmd = &cobra.Command{
 			log.Fatal(err)
 			return
 		}
-		ftemplate.GenerateCmake(config)
+		ftemplate.GenerateCmake(&config)
 		RunCommand("cmake", ".")
 
 	},

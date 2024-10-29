@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  templates-server:
+    build: 
+      context: ${TEMPLATES_SERVER_PATH}  # Use an environment variable for the path
+    image: "frate-templates"
+    ports:
+      - "8080:8080"
+    command: "/app/frate-template"
+    develop:
+      watch:
+        - path: ${TEMPLATES_SERVER_PATH}/main.go
+          action: rebuild
+
+  packages-server:
+    build: 
+      context: ${PACKAGES_SERVER_PATH}  # Use an environment variable for the path
+    image: "frate-packages"
+    ports:
+      - "8000:8000"
+    command: "/app/package-server"
+    develop:
+      watch:
+        - path: ${PACKAGES_SERVER_PATH}/main.go
+          action: rebuild
+

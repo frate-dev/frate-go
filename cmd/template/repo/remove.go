@@ -8,11 +8,12 @@ import (
 
 
 var TemplateRepoRemoveCMD = &cobra.Command{
-	Use:   "remove [repo-url]",
+	Use:   "remove [name]",
 	Short: "Remove a template repository",
+	Aliases: []string{"remove", "rm"},
 	Args:  cobra.ExactArgs(1), 
 	Run: func(cmd *cobra.Command, args []string) {
-		repoURL := args[0]
+		repoName := args[0]
 
 		metadata, err := config.LoadMetadata()
 		if err != nil {
@@ -20,20 +21,20 @@ var TemplateRepoRemoveCMD = &cobra.Command{
 			return
 		}
 
-		var updatedRepos []string
-		for _, repo := range metadata.Repos.AdditionalRepos {
-			if repo != repoURL {
+		var updatedRepos []config.TemplateRepo 
+		for _, repo := range metadata.AdditionalRepos {
+			if repo.Name != repoName {
 				updatedRepos = append(updatedRepos, repo)
 			}
 		}
-		metadata.Repos.AdditionalRepos = updatedRepos
+		metadata.AdditionalRepos = updatedRepos
 
 		if err := config.SaveMetadata(metadata); err != nil {
 			fmt.Printf("Error saving metadata: %v\n", err)
 			return
 		}
 
-		fmt.Printf("Repository %s removed successfully!\n", repoURL)
+		fmt.Printf("Repository %s removed successfully!\n", repoName)
 	},
 }
 

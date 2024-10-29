@@ -13,16 +13,17 @@ var RunCmd = &cobra.Command{
 	Use:   "run",
 	Short: "build and run your project",
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := config.ReadConfig()
+		cfg, err := config.ReadConfig()
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
-		ftemplate.GenerateCmake(config)
+		ftemplate.GenerateCmake(&cfg)
+		config.GenerateConfig(cfg)
 		RunCommand("cmake", ".")
 		RunCommand("make")
     fmt.Println()
-		RunCommand("./" + config.BuildDir + "/" + config.ProjectName)
+		RunCommand("./" + cfg.BuildDir + "/" + cfg.ProjectName)
 
 	},
 }

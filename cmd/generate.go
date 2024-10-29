@@ -16,6 +16,6 @@ var GenerateCmd = &cobra.Command{
 			fmt.Println(err)
 			return
 		}
-		ftemplate.GenerateCmake(config)
+		ftemplate.GenerateCmake(&config)
 	},
 }

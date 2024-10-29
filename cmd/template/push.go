@@ -16,7 +16,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var pushCmd = &cobra.Command{
+var TemplatePushCmd = &cobra.Command{
 	Use:   "push [template-directory]",
 	Short: "Push a template to the server",
 	Long:  `Push a template to the template server, including metadata.yaml and all template files.`,
@@ -25,14 +25,22 @@ var pushCmd = &cobra.Command{
 		templateDir := args[0]
 
 		metadata, err := config.LoadMetadata()
+		server, _ := cmd.Flags().GetString("server")
 		if err != nil {
 			fmt.Printf("Error loading metadata: %v\n", err)
 			return
 		}
 
-		templateServerURL := metadata.Repos.Default
+		templateServer := metadata.Default
+		if server != ""{
+			for _, repo := range metadata.AdditionalRepos{
+				if server == repo.Name{
+					templateServer = repo
+				}
+			}
+		}
 
-		err = pushTemplate(templateDir, templateServerURL)
+		err = pushTemplate(templateDir, templateServer.Url + "/push-template")
 		if err != nil {
 			fmt.Printf("Error pushing template: %v\n", err)
 		} else {
@@ -107,5 +115,6 @@ func pushTemplate(templateDir, serverURL string) error {
 }
 
 func init() {
-	TemplateCMD.AddCommand(pushCmd)
+	TemplatePushCmd.Flags().StringP("server", "s", "", "Name of the Template Server")
+	TemplateCMD.AddCommand(TemplatePushCmd)
 }

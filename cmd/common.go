@@ -3,9 +3,37 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
+	"os"
 	"os/exec"
 )
+
+func CopyFile(src string, dst string) error {
+
+	source, err := os.Open(src)
+	if err != nil {
+		fmt.Println("Error opening source file:", err)
+		return err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer destination.Close()
+
+	_, err = io.Copy(destination, source)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("File copied successfully.")
+
+	return nil
+}
 
 func RunCommand(cmd string, argsAndOptions ...interface{}) {
 	printOutput := true
@@ -59,4 +87,26 @@ func RunCommand(cmd string, argsAndOptions ...interface{}) {
 
 func RemoveIndex[K any](s []K, index int) []K {
 	return append(s[:index], s[index+1:]...)
+}
+
+type Template struct {
+	Id          int    `json:"id"`
+	Name        string `json:"name"`
+	Version     string `json:"version"`
+	Description string `json:"description"`
+	GitUrl      string `json:"git_url"`
+	CreatedAt   string `json:"created_at"`
+}
+
+func Get(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal("error making request: \n\t", err)
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal("error reading body: \n\t", err)
+	}
+	return data, nil
 }

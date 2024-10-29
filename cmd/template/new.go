@@ -8,6 +8,7 @@ import (
 var TemplateInitCMD = &cobra.Command{
 	Use:     "init",
 	Aliases: []string{"i"},
+	Short: "initialize a new template",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if err := cobra.MinimumNArgs(1)(cmd, args); err != nil {
 			return err
