@@ -25,9 +25,11 @@ var TemplateListCMD = &cobra.Command{
 			log.Fatal("Error loading metadata: \n\t", err)
 			return
 		}
-		url := metadata.Default.Url + "/list-templates"
+		url := metadata.Templates.Default.Url + "/list-templates"
+		fmt.Println(metadata)
+		fmt.Println(url)
 		if repo := repoflag; repo != "" { 
-			for _, repo := range metadata.AdditionalRepos { 
+			for _, repo := range metadata.Templates.AdditionalRepos { 
 				if repo.Name == repoflag { 
 					url = repo.Url + "/list-templates" 
 				}
@@ -35,7 +37,7 @@ var TemplateListCMD = &cobra.Command{
 		}
 
 		if len(args) != 0 {
-			for _, repo := range metadata.AdditionalRepos {
+			for _, repo := range metadata.Templates.AdditionalRepos {
 				if args[0] == repo.Name{
 					url = repo.Url + "/list-templates"
 				}

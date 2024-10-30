@@ -20,9 +20,9 @@ var TemplateRepoAddCMD = &cobra.Command{
 			return
 		}
 
-		metadata.AdditionalRepos = append(metadata.AdditionalRepos, repo)
+		metadata.Templates.AdditionalRepos = append(metadata.Templates.AdditionalRepos, repo)
 
-		if err := config.SaveMetadata(metadata); err != nil {
+		if err := metadata.SaveMetadata(); err != nil {
 			fmt.Printf("Error saving metadata: %v\n", err)
 			return
 		}

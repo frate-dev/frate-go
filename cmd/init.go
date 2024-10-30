@@ -52,9 +52,9 @@ var InitCmd = &cobra.Command{
 			return
 		}
 
-		url := metadata.Default.Url + "/list-templates"
+		url := metadata.Templates.Default.Url + "/list-templates"
 		if repo := repoflag; repo != "" {
-			for _, repo := range metadata.AdditionalRepos {
+			for _, repo := range metadata.Templates.AdditionalRepos {
 				if repo.Name == repoflag {
 					url = repo.Url + "/list-templates"
 				}
@@ -184,9 +184,9 @@ func GenerateSource(baseSourceDir string, repoName string, cfg *config.Config) {
 		return
 	}
 
-	templatesUrl := metadata.Default.Url + "/list-templates"
+	templatesUrl := metadata.Templates.Default.Url + "/list-templates"
 	if repoName != "" {
-		for _, repo := range metadata.AdditionalRepos {
+		for _, repo := range metadata.Templates.AdditionalRepos {
 			if repo.Name == repoName {
 				templatesUrl = repo.Url + "/list-templates"
 			}

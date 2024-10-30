@@ -3,8 +3,9 @@ package main
 import (
 	"frate-go/cmd"
 	"frate-go/cmd/dependency"
-	"frate-go/cmd/template"
 	"frate-go/cmd/packages"
+	package_repo "frate-go/cmd/packages/repo"
+	"frate-go/cmd/template"
 
 	"github.com/spf13/cobra"
 )
@@ -26,5 +27,5 @@ func init() {
 	rootCmd.AddCommand(dependency.DependencyCmd)
   rootCmd.AddCommand(template.TemplateCMD)
 	rootCmd.AddCommand(packages.PackageCMD) 
+	rootCmd.AddCommand(package_repo.PackageRepoCmd)  
 }
-

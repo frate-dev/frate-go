@@ -16,13 +16,29 @@ var configPath = filepath.Join(os.Getenv("HOME"), ".local", "share", "frate", "m
 type Dep = dependency.Dependency
 
 type TemplateRepo struct {
-	Name string `yaml:"default"`
+	Name string `yaml:"name"`
 	Url  string `yaml:"url"`
 }
 
-type Metadata struct {
+type PackageRepo struct {
+	Name string `yaml:"name"`
+	Url  string `yaml:"url"`
+}
+
+type TemplateMetadata struct {
 	Default         TemplateRepo   `yaml:"default"`
 	AdditionalRepos []TemplateRepo `yaml:"additional_repos"`
+}
+
+type PackageMetadata struct {
+	Default         PackageRepo   `yaml:"default"`
+	AdditionalRepos []PackageRepo `yaml:"additional_repos"`
+}
+ 
+
+type Metadata struct {
+	Templates TemplateMetadata `yaml:"templates"`
+	Packages  PackageMetadata  `yaml:"packages"`
 }
 
 type Config struct {
@@ -131,27 +147,28 @@ func ReadConfig() (Config, error) {
 	return cfg, nil
 }
 
-func CreateMetadata() error { 
+func CreateMetadata() error {
 	metadata := Metadata{
-		Default: TemplateRepo{
-			Name: "default",
-			Url:  "http://localhost:8080",
+		Templates: TemplateMetadata{
+			Default: TemplateRepo{
+				Name: "default",
+				Url:  "http://localhost:8080",
+			},
 		},
 	}
-	if err := SaveMetadata(&metadata); err != nil { 
-		log.Fatal("Error creating metadata: \n\t", err) 
+	if err := metadata.SaveMetadata(); err != nil {
+		log.Fatal("Error creating metadata: \n\t", err)
 	}
 	return nil
-} 
-
+}
 
 func LoadMetadata() (*Metadata, error) {
 	var metadata Metadata
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		err :=CreateMetadata()
-		if err != nil { 
-			log.Fatal("Error creating metadata: \n\t", err) 
+		err := CreateMetadata()
+		if err != nil {
+			log.Fatal("Error creating metadata: \n\t", err)
 		}
 	}
 
@@ -169,7 +186,9 @@ func LoadMetadata() (*Metadata, error) {
 	return &metadata, nil
 }
 
-func SaveMetadata(metadata *Metadata) error {
+
+
+func (metadata *Metadata)SaveMetadata() error {
 
 	dir := filepath.Dir(configPath)
 	if err := os.MkdirAll(dir, 0755); err != nil {

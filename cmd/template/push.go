@@ -31,9 +31,9 @@ var TemplatePushCmd = &cobra.Command{
 			return
 		}
 
-		templateServer := metadata.Default
+		templateServer := metadata.Templates.Default
 		if server != ""{
-			for _, repo := range metadata.AdditionalRepos{
+			for _, repo := range metadata.Templates.AdditionalRepos{
 				if server == repo.Name{
 					templateServer = repo
 				}

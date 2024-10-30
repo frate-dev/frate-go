@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"frate-go/config"
 	"frate-go/dependency"
-	"io"
+	"frate-go/cmd"
 	"log"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -23,7 +22,7 @@ type Package struct {
 	Name         string             `json:"name"`
 	Version      string             `json:"version"`
 	Description  string             `json:"description"`
-	GitURL       string             `json:"gitURL"`
+	GitURL       string             `json:"git_url"`
 	License      string             `json:"license"`
 	Supports     string             `json:"supports,omitempty"`
 	Stars        int                `json:"stars"`
@@ -43,11 +42,11 @@ var DepAddCmd = &cobra.Command{
 		return nil
 	},
 	Short: "Build the project using CMake",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(command *cobra.Command, args []string) {
 		cfg, err := config.ReadConfig()
 
-		github, _ := cmd.Flags().GetString("github")
-		tag, _ := cmd.Flags().GetString("tag")
+		github, _ := command.Flags().GetString("github")
+		tag, _ := command.Flags().GetString("tag")
 		if err != nil {
 			log.Fatal(err)
 			return
@@ -64,17 +63,9 @@ var DepAddCmd = &cobra.Command{
 		if tag != "" {
 			dep.Tag = tag
 		}
-
-		file, err := os.Open(os.Getenv("HOME") + "/.local/frate/transformed_data.json")
-		if err != nil {
-			log.Fatal(err)
-		}
-
+		data, err := cmd.Get("http://localhost:8000/packages")
 		var packages []Package
-		data, err := io.ReadAll(file)
-    if err != nil {
-      log.Fatal("error reading data", err)
-    }
+		
 
 		err = json.Unmarshal([]byte(data), &packages)
     if err != nil {

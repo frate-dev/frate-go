@@ -17,10 +17,11 @@ var TemplateRepoListCMD = &cobra.Command{
 			fmt.Printf("Error loading metadata: %v\n", err)
 			return
 		}
+
 		fmt.Println(metadata)
 	},
 }
 
 func init() {
-	TemplateRepoCMD.AddCommand(TemplateRepoAddCMD)
+	TemplateRepoCMD.AddCommand(TemplateRepoListCMD)
 }

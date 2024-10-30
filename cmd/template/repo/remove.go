@@ -22,14 +22,14 @@ var TemplateRepoRemoveCMD = &cobra.Command{
 		}
 
 		var updatedRepos []config.TemplateRepo 
-		for _, repo := range metadata.AdditionalRepos {
+		for _, repo := range metadata.Templates.AdditionalRepos {
 			if repo.Name != repoName {
 				updatedRepos = append(updatedRepos, repo)
 			}
 		}
-		metadata.AdditionalRepos = updatedRepos
+		metadata.Templates.AdditionalRepos = updatedRepos
 
-		if err := config.SaveMetadata(metadata); err != nil {
+		if err := metadata.SaveMetadata(); err != nil {
 			fmt.Printf("Error saving metadata: %v\n", err)
 			return
 		}

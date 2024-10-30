@@ -1,5 +1,13 @@
 version: '3.8'
 services:
+  redis:
+    image: "redis:latest"
+    container_name: "frate-redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
   templates-server:
     build: 
       context: ${TEMPLATES_SERVER_PATH}  # Use an environment variable for the path
@@ -7,6 +15,11 @@ services:
     ports:
       - "8080:8080"
     command: "/app/frate-template"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
     develop:
       watch:
         - path: ${TEMPLATES_SERVER_PATH}/main.go
@@ -19,8 +32,16 @@ services:
     ports:
       - "8000:8000"
     command: "/app/package-server"
+    environment:
+      - REDIS_HOST=frate-redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
     develop:
       watch:
         - path: ${PACKAGES_SERVER_PATH}/main.go
           action: rebuild
+volumes:
+  redis-data:
+    driver: local
 
