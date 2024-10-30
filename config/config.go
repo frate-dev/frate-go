@@ -34,7 +34,6 @@ type PackageMetadata struct {
 	Default         PackageRepo   `yaml:"default"`
 	AdditionalRepos []PackageRepo `yaml:"additional_repos"`
 }
- 
 
 type Metadata struct {
 	Templates TemplateMetadata `yaml:"templates"`
@@ -42,25 +41,27 @@ type Metadata struct {
 }
 
 type Config struct {
-	CMakeVersion    string            `yaml:"cmake_version"`
-	ProjectName     string            `yaml:"project_name"`
-	Language        string            `yaml:"language"`
-	LanguageVersion string            `yaml:"language_version"`
-	IncludeDir      string            `yaml:"include_directory"`
-	SourceDir       string            `yaml:"source_directory"`
-	ProjectVersion  string            `yaml:"project_version"`
-	Template        string            `yaml:"template"`
-	Compiler        string            `yaml:"compiler"`
-	BuildDir        string            `yaml:"build_directory"`
-	SourceFiles     []string          `yaml:"source_files"`
-	Options         map[string]string `yaml:"options"`
-	Dependencies    []Dep             `yaml:"dependencies"`
+	CMakeVersion    string            `yaml:"cmake_version" json:"cmake_version"`
+	ProjectName     string            `yaml:"project_name" json:"project_name"`
+	Language        string            `yaml:"language" json:"language"`
+	LanguageVersion string            `yaml:"language_version" json:"language_version"`
+	IncludeDir      string            `yaml:"include_directory" json:"include_directory"`
+	SourceDir       string            `yaml:"source_directory" json:"source_directory"`
+	ProjectVersion  string            `yaml:"project_version" json:"project_version"`
+	Template        string            `yaml:"template" json:"template"`
+	Compiler        string            `yaml:"compiler" json:"compiler"`
+	BuildDir        string            `yaml:"build_directory" json:"build_directory"`
+	BuildCmd        string            `yaml:"build_command" json:"build_command"`
+	SourceFiles     []string          `yaml:"source_files" json:"source_files"`
+	Options         map[string]string `yaml:"options" json:"options"`
+	Dependencies    []Dep             `yaml:"dependencies" json:"dependencies"`
 }
 
 func SetField(obj interface{}, name string, value interface{}) error {
 	structValue := reflect.ValueOf(obj).Elem()
 	structFieldValue := structValue.FieldByName(name)
 
+	fmt.Println(structFieldValue, structValue)
 	if !structFieldValue.IsValid() {
 		return fmt.Errorf("No such field: %s in obj", name)
 	}
@@ -186,9 +187,7 @@ func LoadMetadata() (*Metadata, error) {
 	return &metadata, nil
 }
 
-
-
-func (metadata *Metadata)SaveMetadata() error {
+func (metadata *Metadata) SaveMetadata() error {
 
 	dir := filepath.Dir(configPath)
 	if err := os.MkdirAll(dir, 0755); err != nil {

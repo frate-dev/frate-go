@@ -164,6 +164,7 @@ func FetchAndStoreTemplate(templateName, gitUrl string) (string, error) {
 
 	fmt.Println("Cloning template from repository...")
 	RunCommand("git", "clone", gitUrl, templatePath)
+	fmt.Println(gitUrl, templatePath) 
 
 	if exists, _ := DirExists(templatePath); !exists {
 		return "", fmt.Errorf("failed to clone template into %s", templatePath)

@@ -5,6 +5,7 @@ import (
 	"frate-go/config"
 	"frate-go/ftemplate"
 	"log"
+	"path"
 
 	"github.com/spf13/cobra"
 )
@@ -22,8 +23,13 @@ var RunCmd = &cobra.Command{
 		config.GenerateConfig(cfg)
 		RunCommand("cmake", ".")
 		RunCommand("make")
-    fmt.Println()
-		RunCommand("./" + cfg.BuildDir + "/" + cfg.ProjectName)
+		fmt.Println()
+		if cfg.BuildCmd == "" {
+			command := path.Join(".", cfg.BuildDir, cfg.ProjectName)
+			RunCommand(command)
+			return
+		}
+		RunCommand("bash", "-c", cfg.BuildCmd)
 
 	},
 }
