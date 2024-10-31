@@ -33,13 +33,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: frate-binary
+
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
-        # Example of using the current date for a tag name or replace it with your versioning system
         tag_name: "v${{ github.run_number }}"
         release_name: "Release ${{ github.run_number }}"
         draft: false
@@ -51,7 +55,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./frate
+        asset_path: frate
         asset_name: frate
         asset_content_type: application/octet-stream
-
