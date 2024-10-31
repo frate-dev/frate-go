@@ -39,8 +39,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
-        tag_name: ${{ github.sha }}
-        release_name: "latest"
+        # Example of using the current date for a tag name or replace it with your versioning system
+        tag_name: "v${{ github.run_number }}"
+        release_name: "Release ${{ github.run_number }}"
         draft: false
         prerelease: false
 
