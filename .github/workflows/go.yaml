@@ -40,8 +40,13 @@ jobs:
     - name: Download All Artifacts
       uses: actions/download-artifact@v4
       with:
-        name: frate-${{ matrix.goos }}-${{ matrix.goarch }}
-      
+        name: |
+          frate-linux-amd64
+          frate-linux-arm64
+          frate-windows-amd64
+          frate-windows-arm64
+          frate-darwin-amd64
+          frate-darwin-arm64
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
