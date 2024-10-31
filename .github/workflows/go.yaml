@@ -54,10 +54,11 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload to Release
-      uses: xresloader/upload-to-github-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
       with:
-      file: "frate-*"
-  
+        repo_token: ${{ secrets.TOKEN }}
+        file: frate-* 
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
