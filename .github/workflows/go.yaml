@@ -37,16 +37,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Download All Artifacts
+    - name: Download Artifacts
       uses: actions/download-artifact@v4
       with:
-        name: |
-          frate-linux-amd64
-          frate-linux-arm64
-          frate-windows-amd64
-          frate-windows-arm64
-          frate-darwin-amd64
-          frate-darwin-arm64
+        name: frate-*
+        merge-multiple: true
+
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
@@ -58,19 +54,12 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload All Artifacts to Release
-      uses: actions/upload-release-asset@v1
+    - name: Upload to Release
+      run: |
+        for file in frate-*; do
+          echo "Uploading $file"
+          gh release upload "${{ steps.create_release.outputs.upload_url }}" "$file" --clobber
+        done
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: |
-          frate-linux-amd64
-          frate-linux-arm64
-          frate-windows-amd64
-          frate-windows-arm64
-          frate-darwin-amd64
-          frate-darwin-arm64
-        asset_name: frate
-        asset_content_type: application/octet-stream
 
