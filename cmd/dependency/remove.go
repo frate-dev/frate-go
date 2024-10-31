@@ -24,7 +24,7 @@ var DepRemoveCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		for index, _ := range cfg.Dependencies {
+		for index:= range cfg.Dependencies {
 			for _, arg := range args {
 				if arg == cfg.Dependencies[index].Name {
 					cfg.Dependencies = utils.RemoveIndex(cfg.Dependencies, index)

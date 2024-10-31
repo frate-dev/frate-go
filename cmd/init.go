@@ -65,6 +65,10 @@ var InitCmd = &cobra.Command{
 		var templates []Template
 		json.Unmarshal([]byte(data), &templates)
 
+		if projectName == "FrateProject" {
+			projectName = projectDir
+		}
+
 		cfg := config.Config{
 			CMakeVersion:    cmakeVersion,
 			ProjectName:     projectName,
@@ -164,7 +168,7 @@ func FetchAndStoreTemplate(templateName, gitUrl string) (string, error) {
 
 	fmt.Println("Cloning template from repository...")
 	RunCommand("git", "clone", gitUrl, templatePath)
-	fmt.Println(gitUrl, templatePath) 
+	fmt.Println(gitUrl, templatePath)
 
 	if exists, _ := DirExists(templatePath); !exists {
 		return "", fmt.Errorf("failed to clone template into %s", templatePath)

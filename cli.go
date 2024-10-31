@@ -24,6 +24,7 @@ func init() {
 	rootCmd.AddCommand(cmd.BuildCmd)
 	rootCmd.AddCommand(cmd.GenerateCmd)
 	rootCmd.AddCommand(cmd.RunCmd)
+	rootCmd.AddCommand(cmd.WatchCmd) 
 	rootCmd.AddCommand(dependency.DependencyCmd)
   rootCmd.AddCommand(template.TemplateCMD)
 	rootCmd.AddCommand(packages.PackageCMD) 

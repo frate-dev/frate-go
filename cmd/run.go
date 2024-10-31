@@ -10,10 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var RunCmd = &cobra.Command{
-	Use:   "run",
-	Short: "build and run your project",
-	Run: func(cmd *cobra.Command, args []string) {
+func Run(){
 		cfg, err := config.ReadConfig()
 		if err != nil {
 			log.Fatal(err)
@@ -30,6 +27,13 @@ var RunCmd = &cobra.Command{
 			return
 		}
 		RunCommand("bash", "-c", cfg.BuildCmd)
+}
 
+
+var RunCmd = &cobra.Command{
+	Use:   "run",
+	Short: "build and run your project",
+	Run: func(cmd *cobra.Command, args []string) {
+		Run()
 	},
 }
