@@ -55,11 +55,9 @@ jobs:
         prerelease: false
 
     - name: Upload to Release
-      run: |
-        for file in frate-*; do
-          echo "Uploading $file"
-          gh release upload "${{ steps.create_release.outputs.upload_url }}" "$file" --clobber
-        done
+      uses: xresloader/upload-to-github-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+      file: "frate-*"
+  
