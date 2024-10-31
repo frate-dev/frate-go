@@ -7,9 +7,12 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [ linux, windows, darwin ]
+        goarch: [ amd64, arm64 ]
     steps:
     - uses: actions/checkout@v4
 
@@ -19,13 +22,14 @@ jobs:
         go-version: '1.23'
 
     - name: Build
-      run: go build -o frate .
+      run: |
+        GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o frate-${{ matrix.goos }}-${{ matrix.goarch }} .
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: frate-binary
-        path: frate
+        name: frate-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: frate-${{ matrix.goos }}-${{ matrix.goarch }}
 
   release:
     needs: build
@@ -33,10 +37,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Download Artifact
+    - name: Download Artifacts
       uses: actions/download-artifact@v4
       with:
-        name: frate-binary
+        name: '**'
 
     - name: Create GitHub Release
       id: create_release
@@ -55,6 +59,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: frate
-        asset_name: frate
+        asset_path: frate-${{ matrix.goos }}-${{ matrix.goarch }}
+        asset_name: frate-${{ matrix.goos }}-${{ matrix.goarch }}
         asset_content_type: application/octet-stream
+
