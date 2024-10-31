@@ -34,13 +34,17 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [ linux, windows, darwin ]
+        goarch: [ amd64, arm64 ]
     steps:
     - uses: actions/checkout@v4
 
     - name: Download Artifacts
       uses: actions/download-artifact@v4
       with:
-        name: '**'
+        name: frate-${{ matrix.goos }}-${{ matrix.goarch }}
 
     - name: Create GitHub Release
       id: create_release
