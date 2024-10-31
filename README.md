@@ -29,7 +29,7 @@
 
 ### Linux and Mac
    ```bash
-
+ curl https://raw.githubusercontent.com/frate-dev/frate-go/refs/heads/main/install.sh | bash
    ```
 
 ## Usage 
