@@ -27,6 +27,11 @@
    go install github.com/frate-dev/frate-go@latest
    ```
 
+### Linux and Mac
+   ```bash
+
+   ```
+
 ## Usage 
 
 
